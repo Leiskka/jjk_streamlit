@@ -228,55 +228,6 @@ if match_file_name and uploaded_files:
                 st.info("Please upload match files to view KPI trends.")
 
         with tab_export:
-            st.subheader("Export All Visualizations as PDF")
-            if match_file_name and uploaded_files:
-                if st.button("Generate PDF"):
-                    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmpfile:
-                        with PdfPages(tmpfile.name) as pdf:
-                            # Generate and save all figures, forcing A4 size
-                            row_labels, jjk_stats, opp_stats = extract_full_match_stats(df, xgb_model, expected_cols, team_name)
-                            fig1 = generate_kpi_table(row_labels, jjk_stats, opp_stats, team_name)
-                            fig1.set_size_inches(8.27, 11.69)
-                            pdf.savefig(fig1, bbox_inches='tight')
-                            plt.close(fig1)
-
-                            jjk_vals, opp_vals = extract_radar_kpis(df, xgb_model, expected_cols)
-                            avg_jjk, avg_opp = get_avg_kpis_from_uploads(uploaded_files, xgb_model, expected_cols, selected_half)
-                            if (
-                                avg_jjk is not None and avg_opp is not None and
-                                not np.any(np.isnan(jjk_vals)) and
-                                not np.any(np.isnan(opp_vals)) and
-                                not np.any(np.isnan(avg_jjk)) and
-                                not np.any(np.isnan(avg_opp))
-                            ):
-                                fig2 = generate_radar_chart(jjk_vals, opp_vals, avg_jjk, avg_opp, team_name)
-                                fig2.set_size_inches(8.27, 11.69)
-                                pdf.savefig(fig2, bbox_inches='tight')
-                                plt.close(fig2)
-                                fig3 = plot_kpi_bars(jjk_vals, opp_vals, avg_jjk, avg_opp, team_name)
-                                fig3.set_size_inches(8.27, 11.69)
-                                pdf.savefig(fig3, bbox_inches='tight')
-                                plt.close(fig3)
-                            fig4 = plot_cumulative_xg(df, xgb_model, expected_cols, team_name)
-                            fig4.set_size_inches(8.27, 11.69)
-                            pdf.savefig(fig4, bbox_inches='tight')
-                            plt.close(fig4)
-                            fig5 = plot_momentum_chart(df, team_name)
-                            fig5.set_size_inches(8.27, 11.69)
-                            pdf.savefig(fig5, bbox_inches='tight')
-                            plt.close(fig5)
-                            fig6 = plot_combined_pitch(df, xgb_model, expected_cols, ["Shots", "Fouls", "Interceptions", "Defensive Duels", "Box Entry Passes"], team_name)
-                            fig6.set_size_inches(8.27, 11.69)
-                            pdf.savefig(fig6, bbox_inches='tight')
-                            plt.close(fig6)
-                        with open(tmpfile.name, "rb") as f:
-                            st.download_button(
-                                label="Download PDF",
-                                data=f,
-                                file_name=f"JJK_vs_{team_name}_visualizations.pdf",
-                                mime="application/pdf"
-                            )
-
             # --- CSV Export ---
             st.subheader("Export All Uploaded Matches' Stats as CSV")
             if uploaded_files:
