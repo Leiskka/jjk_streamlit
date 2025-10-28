@@ -271,14 +271,18 @@ def create_match_report_pdf(df, xgb_model, expected_cols, team_name, selected_ha
         fig1.suptitle(title_with_date, 
                      fontsize=18, fontweight='bold', y=0.92, color='white')
         
-        # Add JJK logo
+        # Add JJK logo from GitHub repo (main branch, next to app_upload.py)
         try:
-            logo_path = r"C:\Users\einon\Desktop\Valmennus\JJK B\Data-Analyysit\Scriptit\jjk-logo-VERKKO-1024x972.png"
-            logo_img = plt.imread(logo_path)
+            logo_url = "https://raw.githubusercontent.com/Leiskka/jjk_streamlit/main/jjk-logo-VERKKO-1024x972.png"
+            import requests
+            from PIL import Image
+            logo_response = requests.get(logo_url)
+            logo_response.raise_for_status()
+            logo_img = Image.open(io.BytesIO(logo_response.content))
             logo_ax = fig1.add_axes([0.83, 0.87, 0.12, 0.08], zorder=10)
             logo_ax.imshow(logo_img)
             logo_ax.axis('off')
-        except FileNotFoundError:
+        except Exception:
             pass
         
         # Create 2-column layout for page 1 - similar to jaksoraportti
@@ -458,14 +462,18 @@ def create_jaksoraportti_report_pdf(uploaded_files, uploaded_dfs, xgb_model, exp
         fig1.suptitle(title, 
                      fontsize=18, fontweight='bold', y=0.92, color='white')
         
-        # Add JJK logo
+        # Add JJK logo from GitHub repo (main branch, next to app_upload.py)
         try:
-            logo_path = r"C:\Users\einon\Desktop\Valmennus\JJK B\Data-Analyysit\Scriptit\jjk-logo-VERKKO-1024x972.png"
-            logo_img = plt.imread(logo_path)
+            logo_url = "https://raw.githubusercontent.com/Leiskka/jjk_streamlit/main/jjk-logo-VERKKO-1024x972.png"
+            import requests
+            from PIL import Image
+            logo_response = requests.get(logo_url)
+            logo_response.raise_for_status()
+            logo_img = Image.open(io.BytesIO(logo_response.content))
             logo_ax = fig1.add_axes([0.83, 0.87, 0.12, 0.08], zorder=10)
             logo_ax.imshow(logo_img)
             logo_ax.axis('off')
-        except FileNotFoundError:
+        except Exception:
             pass
         
         # Create 2-column layout for page 1 - give more space to KPI table
